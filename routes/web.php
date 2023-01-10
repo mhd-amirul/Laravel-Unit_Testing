@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\auth\registerUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +19,8 @@ Route::get('/', function () {
 });
 
 Route::redirect('about-page', 'page');
-
 Route::get('page', fn () => "About");
+Route::get('home', fn () => view("pages.home"));
+
+Route::get("register", [registerUserController::class, "create"]);
+Route::post("register", [registerUserController::class, "store"]);
