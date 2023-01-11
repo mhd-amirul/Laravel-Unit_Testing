@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\auth\registerUserController;
+use App\Http\Controllers\V1\auth\AppAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,14 +13,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// V1
+include(base_path("routes/V1/route.php"));
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::redirect('about-page', 'page');
-Route::get('page', fn () => "About");
-Route::get('home', fn () => view("pages.home"));
-
-Route::get("register", [registerUserController::class, "create"]);
-Route::post("register", [registerUserController::class, "store"]);
