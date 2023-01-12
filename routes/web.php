@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\V1\auth\AppAuthController;
+use App\Http\Controllers\V2\AppProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 // V1
 include(base_path("routes/V1/route.php"));
 
+Route::get('product', [AppProductController::class, "product"]);
