@@ -41,4 +41,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function employeeFired()
+    {
+        $this->employee_id = null;
+        $this->save();
+
+        return $this;
+    }
 }
