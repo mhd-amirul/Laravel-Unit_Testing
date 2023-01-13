@@ -21,7 +21,6 @@ class AppEmployeeTest extends TestCase
     public function createNewEmployee($employee, $create = "", $data = [])
     {
         $employee->add(User::factory($create)->create($data));
-
         return $employee;
     }
 
@@ -37,7 +36,6 @@ class AppEmployeeTest extends TestCase
     public function Employee_can_add_new_employee()
     {
         $employee = $this->createEmployee();
-
         $employee = $this->createNewEmployee($employee);
         $employee = $this->createNewEmployee($employee);
 
@@ -48,12 +46,10 @@ class AppEmployeeTest extends TestCase
     public function check_maximum_size_employer_has_reached()
     {
         $employee = $this->createEmployee("" , ["size" => 2]);
-
         $employee = $this->createNewEmployee($employee);
         $employee = $this->createNewEmployee($employee);
 
         $this->assertEquals(2, $employee->count());
-
         $this->expectException("Exception");
 
         $employee = $this->createNewEmployee($employee);
@@ -63,7 +59,6 @@ class AppEmployeeTest extends TestCase
     public function Employee_can_add_many_new_employee_at_once()
     {
         $employee = $this->createEmployee();
-
         $employee = $this->createNewEmployee($employee, 2);
 
         $this->assertEquals(2, $employee->count());
@@ -73,11 +68,8 @@ class AppEmployeeTest extends TestCase
     public function Employee_can_remove_employee()
     {
         $employee = $this->createEmployee();
-
         $users = User::factory(2)->create();
-
         $employee->add($users);
-
         $employee->remove($users[0]);
 
         $this->assertEquals(1, $employee->count());
@@ -87,11 +79,8 @@ class AppEmployeeTest extends TestCase
     public function Employee_can_remove_employee_more_than_one_at_once()
     {
         $employee = $this->createEmployee();
-
         $users = User::factory(3)->create();
-
         $employee->add($users);
-
         $employee->remove($users->slice(0, 2));
 
         $this->assertEquals(1, $employee->count());
@@ -101,11 +90,21 @@ class AppEmployeeTest extends TestCase
     public function Employee_can_remove_many_employee_at_once()
     {
         $employee = $this->createEmployee();
-
         $employee = $this->createNewEmployee($employee, 2);
-
         $employee->restart();
 
         $this->assertEquals(0, $employee->count());
+    }
+
+    /** @test */
+    public function Employee_can_remove_many_employee_at_once_fix_bug_version()
+    {
+        $employee = $this->createEmployee("", ["size" => 2]);
+        $users = User::factory(3)->create();
+
+        $this->expectException("Exception");
+
+        $employee->add($users);
+
     }
 }
