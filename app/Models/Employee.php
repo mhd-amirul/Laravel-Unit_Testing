@@ -11,13 +11,13 @@ class Employee extends Model
 
     protected $fillable = ["name", "size"];
 
-    public function add($user)
+    public function add($users)
     {
-        $this->GuardAgaintsTooManyMember();
+        $this->GuardAgaintsTooManyMember($users);
 
-        $method = $user instanceof User ? "save" : "saveMany";
+        $method = $users instanceof User ? "save" : "saveMany";
 
-        $this->employeers()->$method($user);
+        $this->employeers()->$method($users);
     }
 
     public function employeers()
@@ -49,9 +49,13 @@ class Employee extends Model
         return $this->employeers()->update(["employee_id" => null]);
     }
 
-    protected function GuardAgaintsTooManyMember()
+    protected function GuardAgaintsTooManyMember($users)
     {
-        if ($this->count() >= $this->size) {
+        $numberEmployee = ($users instanceof User) ?  1 : count($users);
+
+        $EmployeeToAdd = $this->count() + $numberEmployee;
+
+        if ($EmployeeToAdd > $this->size) {
             throw new \Exception;
         }
     }

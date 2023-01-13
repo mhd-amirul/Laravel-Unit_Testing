@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRatesTable extends Migration
+class CreateLikesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateRatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('rates', function (Blueprint $table) {
-            $table->id();
-            $table->string("store");
-            $table->integer("like")->default(0);
-            $table->integer("unlike")->default(0);
+        Schema::create('likes', function (Blueprint $table) {
+            $table->integer("user_id")->index();
+            $table->integer("likeable_id")->unsigned();
+            $table->string("likeable_type");
+
+            $table->primary(["user_id", "likeable_id", "likeable_type"]);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateRatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rates');
+        Schema::dropIfExists('likes');
     }
 }
