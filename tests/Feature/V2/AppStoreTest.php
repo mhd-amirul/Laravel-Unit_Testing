@@ -12,72 +12,74 @@ class AppStoreTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function user_can_like_post()
+    public function setting()
     {
         $post = Post::factory()->create();
         $user = User::factory()->create();
 
         $this->actingAs($user);
 
-        $post->like();
+        return [
+            "post" => $post,
+            "user" => $user,
+            "response" => $this
+        ];
+    }
 
-        $this->assertDatabaseHas('likes', [
-            "user_id" => $user->id,
-            "likeable_id" => $post->id,
-            "likeable_type" => get_class($post)
+    /** @test */
+    public function user_can_like_post()
+    {
+        $data = $this->setting();
+
+        $data["post"]->like();
+
+        $data["response"]->assertDatabaseHas('likes', [
+            "user_id" => $data["user"]->id,
+            "likeable_id" => $data["post"]->id,
+            "likeable_type" => get_class($data["post"])
         ]);
 
-        $this->assertTrue($post->isLiked());
+        $data["response"]->assertTrue($data["post"]->isLiked());
     }
 
     /** @test */
     public function user_can_unlike_post()
     {
-        $post = Post::factory()->create();
-        $user = User::factory()->create();
+        $data = $this->setting();
 
-        $this->actingAs($user);
+        $data["post"]->like();
+        $data["post"]->unlike();
 
-        $post->like();
-        $post->unlike();
-
-        $this->assertDatabaseMissing('likes', [
-            "user_id" => $user->id,
-            "likeable_id" => $post->id,
-            "likeable_type" => get_class($post)
+        $data["response"]->assertDatabaseMissing('likes', [
+            "user_id" => $data["user"]->id,
+            "likeable_id" => $data["post"]->id,
+            "likeable_type" => get_class($data["post"])
         ]);
 
-        $this->assertFalse($post->isLiked());
+        $data["response"]->assertFalse($data["post"]->isLiked());
     }
 
     /** @test */
     public function user_toggle_like_or_unlike_on_post()
     {
-        $post = Post::factory()->create();
-        $user = User::factory()->create();
+        $data = $this->setting();
 
-        $this->actingAs($user);
+        $data["post"]->toggle();
 
-        $post->toggle();
+        $data["response"]->assertTrue($data["post"]->isLiked());
 
-        $this->assertTrue($post->isLiked());
+        $data["post"]->toggle();
 
-        $post->toggle();
-
-        $this->assertFalse($post->isLiked());
+        $data["response"]->assertFalse($data["post"]->isLiked());
     }
 
     /** @test */
     public function count_how_many_like_on_post()
     {
-        $post = Post::factory()->create();
-        $user = User::factory()->create();
+        $data = $this->setting();
 
-        $this->actingAs($user);
+        $data["post"]->toggle();
 
-        $post->toggle();
-
-        $this->assertEquals(1, $post->getLikesCountAttribute());
+        $data["response"]->assertEquals(1, $data["post"]->getLikesCountAttribute());
     }
 }
