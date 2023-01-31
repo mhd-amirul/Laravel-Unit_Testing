@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V2\AppProductController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +18,11 @@ use Illuminate\Support\Facades\Route;
 include(base_path("routes/V1/route.php"));
 
 Route::get('product', [AppProductController::class, "product"]);
+Route::get('check-email', function () {
+    Mail::raw("Hello World", function ($message) {
+        $message->from('a@a.com', 'a');
+        $message->to('b@b.com', 'b');
+    });
+
+    return "Email was sent";
+});
