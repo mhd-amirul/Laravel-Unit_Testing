@@ -34,8 +34,11 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
-            "": "tests/Feature/src"
-        }
+            "": "tests/Feature/Helpers/Expression.php"
+        },
+        "files": [
+            "tests/Feature/Helpers/MailTracking.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [
