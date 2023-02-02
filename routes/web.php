@@ -26,3 +26,5 @@ Route::get('check-email', function () {
 
     return "Email was sent";
 });
+
+Route::post('costumer-service', [AppProductController::class, "costumerService"]);
